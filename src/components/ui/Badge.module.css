@@ -1,0 +1,54 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.sm {
+  padding: var(--space-1) var(--space-2);
+  font-size: 0.75rem;
+}
+
+.md {
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.875rem;
+}
+
+.default {
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.role {
+  background: var(--color-role-bg);
+  color: var(--color-role);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.skill {
+  background: var(--color-skill-bg);
+  color: var(--color-skill);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.tech {
+  background: var(--color-tech-bg);
+  color: var(--color-tech);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.project {
+  background: var(--color-project-bg);
+  color: var(--color-project);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.resource {
+  background: var(--color-resource-bg);
+  color: var(--color-resource);
+  border: 1px solid rgba(100, 116, 139, 0.2);
+}

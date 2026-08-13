@@ -1,0 +1,40 @@
+.banner {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  margin: var(--space-8) 0;
+}
+
+.content {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.icon {
+  font-size: 1.5rem;
+  color: var(--error);
+  flex-shrink: 0;
+}
+
+.text {
+  flex: 1;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--error);
+  margin-bottom: var(--space-1);
+}
+
+.message {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.action {
+  margin-top: var(--space-4);
+}

@@ -1,0 +1,135 @@
+.page {
+  padding: var(--space-8) 0 var(--space-20);
+}
+
+.header {
+  margin-bottom: var(--space-12);
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+  letter-spacing: -0.02em;
+}
+
+.description {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 700px;
+}
+
+.techGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--space-6);
+}
+
+.techCard {
+  padding: var(--space-6);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  transition: all var(--transition-base);
+}
+
+.techCard:hover {
+  border-color: var(--border-medium);
+  transform: translateY(-2px);
+}
+
+.techHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.techInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+}
+
+.techName {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.techCount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-tech-bg);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.countValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-tech);
+}
+
+.countLabel {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.techRoles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.rolesLabel {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.rolesList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.roleName {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  padding: var(--space-1) 0;
+}
+
+.rolesMore {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: var(--space-1);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .techGrid {
+    grid-template-columns: 1fr;
+  }
+}

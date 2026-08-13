@@ -1,0 +1,297 @@
+.page {
+  padding: var(--space-8) 0 var(--space-20);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: var(--space-8);
+}
+
+.breadcrumb a {
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.breadcrumb a:hover {
+  color: var(--accent-primary);
+}
+
+.separator {
+  color: var(--border-medium);
+}
+
+.header {
+  margin-bottom: var(--space-12);
+}
+
+.headerTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: var(--space-3);
+  letter-spacing: -0.02em;
+}
+
+.description {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 800px;
+  margin-bottom: var(--space-8);
+}
+
+.metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  padding: var(--space-6);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.metaLabel {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+.metaValue {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.section {
+  margin-bottom: var(--space-16);
+}
+
+.skillGroup {
+  margin-bottom: var(--space-10);
+}
+
+.skillGroupTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.skillGroupDescription {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.skillList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.skillBadge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.skillBadge:hover {
+  border-color: var(--color-skill);
+  transform: translateY(-1px);
+}
+
+.skillDifficulty {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+
+.techList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+
+.techItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.techIcon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.techInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.techName {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.relatedRoles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-6);
+}
+
+.relatedCard {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  transition: border-color var(--transition-fast);
+}
+
+.relatedCard:hover {
+  border-color: var(--border-medium);
+}
+
+.relatedHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.relatedTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color var(--transition-fast);
+}
+
+.relatedTitle:hover {
+  color: var(--accent-primary);
+}
+
+.relatedCount {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.relatedSkills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.relatedMore {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.compareButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  align-self: flex-start;
+}
+
+.compareButton:hover {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: white;
+}
+
+.graphPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-20) var(--space-6);
+  background: var(--bg-elevated);
+  border: 2px dashed var(--border-subtle);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.placeholderIcon {
+  font-size: 4rem;
+  color: var(--accent-primary);
+  margin-bottom: var(--space-4);
+  opacity: 0.5;
+}
+
+.placeholderTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+
+.placeholderDescription {
+  color: var(--text-secondary);
+  max-width: 480px;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .metadata {
+    gap: var(--space-6);
+  }
+
+  .techList {
+    grid-template-columns: 1fr;
+  }
+
+  .relatedRoles {
+    grid-template-columns: 1fr;
+  }
+}

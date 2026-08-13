@@ -1,0 +1,96 @@
+.error {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8) 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 500px;
+}
+
+.icon {
+  font-size: 4rem;
+  color: var(--error);
+  margin-bottom: var(--space-6);
+  opacity: 0.8;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+
+.description {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--space-8);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.retryButton,
+.homeLink {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-3) var(--space-6);
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+}
+
+.retryButton {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+}
+
+.retryButton:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.homeLink {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+}
+
+.homeLink:hover {
+  border-color: var(--border-medium);
+  background: var(--bg-hover);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .retryButton,
+  .homeLink {
+    width: 100%;
+    justify-content: center;
+  }
+}

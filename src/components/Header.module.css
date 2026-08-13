@@ -1,0 +1,145 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-subtle);
+  backdrop-filter: blur(8px);
+}
+
+.container {
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color var(--transition-fast);
+}
+
+.logo:hover {
+  color: var(--accent-primary);
+}
+
+.logoText::before {
+  content: "◆";
+  color: var(--accent-primary);
+  margin-right: var(--space-2);
+  font-size: 0.875rem;
+}
+
+.desktopNav {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.navLink {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  padding: var(--space-2) 0;
+  position: relative;
+  transition: color var(--transition-fast);
+}
+
+.navLink:hover {
+  color: var(--text-primary);
+}
+
+.navLinkActive {
+  color: var(--text-primary);
+}
+
+.navLinkActive::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-primary);
+}
+
+.mobileMenuButton {
+  display: none;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+}
+
+.hamburger {
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  position: relative;
+  display: block;
+}
+
+.hamburger::before,
+.hamburger::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  left: 0;
+  transition: transform var(--transition-fast);
+}
+
+.hamburger::before {
+  top: -6px;
+}
+
+.hamburger::after {
+  bottom: -6px;
+}
+
+.mobileNav {
+  display: none;
+  border-top: 1px solid var(--border-subtle);
+  padding: var(--space-4) var(--space-6);
+  background: var(--bg-elevated);
+}
+
+.mobileNavLink {
+  display: block;
+  padding: var(--space-3) 0;
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.mobileNavLink:hover {
+  color: var(--text-primary);
+}
+
+.mobileNavLinkActive {
+  color: var(--accent-primary);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--space-4);
+  }
+
+  .desktopNav {
+    display: none;
+  }
+
+  .mobileMenuButton {
+    display: flex;
+  }
+
+  .mobileNav {
+    display: block;
+  }
+}
