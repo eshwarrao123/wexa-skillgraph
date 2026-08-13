@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/Badge";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorBanner } from "@/components/ui/ErrorBanner";
+import { RoleGraph } from "@/components/RoleGraph";
 import styles from "./page.module.css";
 
 interface RolePageProps {
@@ -232,14 +233,7 @@ export default async function RolePage({ params }: RolePageProps) {
           )}
 
           <section className={styles.section}>
-            <div className={styles.graphPlaceholder}>
-              <div className={styles.placeholderIcon}>◈</div>
-              <h3 className={styles.placeholderTitle}>Interactive Graph</h3>
-              <p className={styles.placeholderDescription}>
-                Explore this role's connected skills, technologies, and projects
-                visually. Graph visualization coming in Phase 4.
-              </p>
-            </div>
+            <RoleGraph roleSlug={slug} roleName={role.name} />
           </section>
         </div>
       </div>
