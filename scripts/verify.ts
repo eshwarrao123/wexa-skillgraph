@@ -19,7 +19,7 @@ function countGraphIntegrity(graph: Awaited<ReturnType<typeof getRoleSubgraph>>)
 }
 
 async function verify() {
-  const { executeRead, closeDriver } = await import("../src/lib/neo4j");
+  const { executeRead } = await import("../src/lib/neo4j");
   const {
     getAllRoles,
     getRoleDetail,
