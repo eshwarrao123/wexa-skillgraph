@@ -2,7 +2,7 @@
  * Tests for graph API route and data transformation
  */
 
-import { describe, it, expect, jest } from '@jest/globals';
+import { describe, it, expect } from '@jest/globals';
 
 // Mock data structures
 interface MockGraphData {

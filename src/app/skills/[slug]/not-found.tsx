@@ -9,7 +9,7 @@ export default function SkillNotFound() {
           <div className={styles.icon}>◈</div>
           <h1 className={styles.title}>Skill Not Found</h1>
           <p className={styles.description}>
-            The skill you're looking for doesn't exist in our database.
+            The skill you&apos;re looking for doesn&apos;t exist in our database.
           </p>
           <Link href="/" className={styles.homeLink}>
             Browse All Roles

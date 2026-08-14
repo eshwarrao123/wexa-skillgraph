@@ -4,6 +4,8 @@ import { ErrorBanner } from "@/components/ui/ErrorBanner";
 import { type RoleWithSkillCount } from "@/lib/types";
 import styles from "./page.module.css";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   let roles: RoleWithSkillCount[];
   let error: string | null = null;

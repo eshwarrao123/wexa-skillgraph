@@ -9,6 +9,8 @@ import { ErrorBanner } from "@/components/ui/ErrorBanner";
 import { RoleGraph } from "@/components/RoleGraph";
 import styles from "./page.module.css";
 
+export const dynamic = "force-dynamic";
+
 interface RolePageProps {
   params: Promise<{ slug: string }>;
 }

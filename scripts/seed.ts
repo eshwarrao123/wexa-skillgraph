@@ -7,8 +7,11 @@
  * constraints, loads all nodes and relationships.
  */
 
+import { loadEnvConfig } from "@next/env";
 import neo4j from "neo4j-driver";
 import * as data from "./seed-data";
+
+loadEnvConfig(process.cwd());
 
 // ── Environment ───────────────────────────────────────────────────────
 
@@ -199,6 +202,22 @@ async function seed() {
   const rels = relCount.records[0].get("c").toNumber();
   console.log(`   Nodes: ${nodes}`);
   console.log(`   Relationships: ${rels}`);
+
+  const nodesByLabel = await run(
+    "MATCH (n) RETURN labels(n)[0] AS label, count(n) AS count ORDER BY label"
+  );
+  console.log("   Nodes by label:");
+  for (const record of nodesByLabel.records) {
+    console.log(`     ${record.get("label")}: ${record.get("count").toNumber()}`);
+  }
+
+  const relationshipsByType = await run(
+    "MATCH ()-[r]->() RETURN type(r) AS type, count(r) AS count ORDER BY type"
+  );
+  console.log("   Relationships by type:");
+  for (const record of relationshipsByType.records) {
+    console.log(`     ${record.get("type")}: ${record.get("count").toNumber()}`);
+  }
 
   const totalRels =
     data.requiresSkill.length + data.usesTechnology.length +

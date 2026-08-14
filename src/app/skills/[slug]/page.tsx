@@ -7,6 +7,8 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorBanner } from "@/components/ui/ErrorBanner";
 import styles from "./page.module.css";
 
+export const dynamic = "force-dynamic";
+
 interface SkillPageProps {
   params: Promise<{ slug: string }>;
 }

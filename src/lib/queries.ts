@@ -18,7 +18,6 @@ import type {
   GraphNode,
   GraphLink,
   TechPopularity,
-  Role,
   Skill,
   Technology,
   Project,

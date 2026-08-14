@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getRoleSubgraph } from "@/lib/queries";
+import { getRoleDetail, getRoleSubgraph } from "@/lib/queries";
 import { SlugSchema } from "@/lib/schemas";
 import { z } from "zod";
 
@@ -32,7 +32,19 @@ export async function GET(
     const limitParam = searchParams.get("limit");
     const { limit } = GraphQuerySchema.parse({ limit: limitParam });
 
-    // Fetch graph data using existing query
+    const role = await getRoleDetail(validatedSlug);
+    if (!role) {
+      return NextResponse.json(
+        {
+          error: {
+            code: "ROLE_NOT_FOUND",
+            message: "The requested role could not be found.",
+          },
+        },
+        { status: 404 }
+      );
+    }
+
     const graphData = await getRoleSubgraph(validatedSlug, limit);
 
     // Ensure all data is JSON-safe (remove Neo4j-specific objects)

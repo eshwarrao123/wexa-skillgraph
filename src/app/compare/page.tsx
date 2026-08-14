@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Suspense, useState, useEffect, useCallback } from "react";
 import { type RoleWithSkillCount, type SharedSkill } from "@/lib/types";
 import { Badge } from "@/components/ui/Badge";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -11,8 +10,9 @@ import { ErrorBanner } from "@/components/ui/ErrorBanner";
 import { Skeleton } from "@/components/ui/Skeleton";
 import styles from "./page.module.css";
 
-export default function ComparePage() {
+function ComparePageContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const role1Slug = searchParams.get("role1");
   const role2Slug = searchParams.get("role2");
 
@@ -36,33 +36,42 @@ export default function ComparePage() {
       .catch(() => setError("Failed to load roles"));
   }, []);
 
-  useEffect(() => {
-    if (role1 && role2 && role1 !== role2) {
-      setLoading(true);
-      setError(null);
-      fetch(`/api/compare?role1=${role1}&role2=${role2}`)
-        .then((res) => {
-          if (!res.ok) throw new Error("Failed to compare roles");
-          return res.json();
-        })
-        .then((data) => {
-          setComparison(data);
-          setLoading(false);
-        })
-        .catch((err) => {
-          setError(err.message);
-          setLoading(false);
-        });
+  const loadComparison = useCallback(async () => {
+    if (!role1 || !role2 || role1 === role2) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/compare?role1=${role1}&role2=${role2}`);
+      if (!response.ok) throw new Error("Failed to compare roles");
+      setComparison(await response.json());
+    } catch (comparisonError) {
+      setError(
+        comparisonError instanceof Error
+          ? comparisonError.message
+          : "Failed to compare roles"
+      );
+    } finally {
+      setLoading(false);
     }
   }, [role1, role2]);
 
+  useEffect(() => {
+    if (!role1Slug || !role2Slug) return;
+
+    const timer = window.setTimeout(() => {
+      void loadComparison();
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, [loadComparison, role1Slug, role2Slug]);
+
   const handleCompare = () => {
-    if (role1 && role2 && role1 !== role2) {
-      const url = new URL(window.location.href);
-      url.searchParams.set("role1", role1);
-      url.searchParams.set("role2", role2);
-      window.history.pushState({}, "", url);
-    }
+    if (!role1 || !role2 || role1 === role2) return;
+
+    router.replace(`/compare?role1=${role1}&role2=${role2}`);
+    void loadComparison();
   };
 
   return (
@@ -86,7 +95,10 @@ export default function ComparePage() {
                 <select
                   id="role1"
                   value={role1}
-                  onChange={(e) => setRole1(e.target.value)}
+                  onChange={(e) => {
+                    setRole1(e.target.value);
+                    setComparison(null);
+                  }}
                   className={styles.select}
                 >
                   <option value="">Select a role...</option>
@@ -107,7 +119,10 @@ export default function ComparePage() {
                 <select
                   id="role2"
                   value={role2}
-                  onChange={(e) => setRole2(e.target.value)}
+                  onChange={(e) => {
+                    setRole2(e.target.value);
+                    setComparison(null);
+                  }}
                   className={styles.select}
                 >
                   <option value="">Select a role...</option>
@@ -260,5 +275,13 @@ export default function ComparePage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function ComparePage() {
+  return (
+    <Suspense fallback={<main className="container" />}>
+      <ComparePageContent />
+    </Suspense>
   );
 }

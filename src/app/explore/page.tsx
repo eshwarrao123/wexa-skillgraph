@@ -6,6 +6,8 @@ import { ErrorBanner } from "@/components/ui/ErrorBanner";
 import { type TechPopularity } from "@/lib/types";
 import styles from "./page.module.css";
 
+export const dynamic = "force-dynamic";
+
 export default async function ExplorePage() {
   let technologies: TechPopularity[];
   let error: string | null = null;

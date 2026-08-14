@@ -6,18 +6,19 @@
  * All database access MUST go through this module — never import neo4j-driver elsewhere.
  */
 
-import neo4j, { Driver, Session, SessionMode } from "neo4j-driver";
+import neo4j, { Driver, Session } from "neo4j-driver";
 
 // ── Environment validation ────────────────────────────────────────────
-const COGNODB_URI = process.env.COGNODB_URI;
-const COGNODB_USER = process.env.COGNODB_USER;
-const COGNODB_PASSWORD = process.env.COGNODB_PASSWORD;
 
 function validateEnv(): { uri: string; user: string; password: string } {
+  const uri = process.env.COGNODB_URI;
+  const user = process.env.COGNODB_USER;
+  const password = process.env.COGNODB_PASSWORD;
+
   const missing: string[] = [];
-  if (!COGNODB_URI) missing.push("COGNODB_URI");
-  if (!COGNODB_USER) missing.push("COGNODB_USER");
-  if (!COGNODB_PASSWORD) missing.push("COGNODB_PASSWORD");
+  if (!uri) missing.push("COGNODB_URI");
+  if (!user) missing.push("COGNODB_USER");
+  if (!password) missing.push("COGNODB_PASSWORD");
 
   if (missing.length > 0) {
     throw new Error(
@@ -26,11 +27,7 @@ function validateEnv(): { uri: string; user: string; password: string } {
     );
   }
 
-  return {
-    uri: COGNODB_URI!,
-    user: COGNODB_USER!,
-    password: COGNODB_PASSWORD!,
-  };
+  return { uri: uri!, user: user!, password: password! };
 }
 
 // ── Singleton driver ──────────────────────────────────────────────────
@@ -48,8 +45,8 @@ function getDriver(): Driver {
     neo4j.auth.basic(env.user, env.password),
     {
       maxConnectionPoolSize: 10,
-      connectionAcquisitionTimeout: 10_000, // 10s
-      connectionTimeout: 5_000, // 5s
+      connectionAcquisitionTimeout: 10_000,
+      connectionTimeout: 5_000,
       logging: {
         level: "warn",
         logger: (level, message) =>
@@ -65,18 +62,13 @@ function getDriver(): Driver {
   return driver;
 }
 
-export const driver = getDriver();
-
 // ── Session helpers ───────────────────────────────────────────────────
 
-/**
- * Execute a read query with automatic session lifecycle management.
- * The session is always closed in the finally block.
- */
 export async function executeRead<T>(
   work: (session: Session) => Promise<T>
 ): Promise<T> {
-  const session = driver.session({ defaultAccessMode: neo4j.session.READ });
+  const d = getDriver();
+  const session = d.session({ defaultAccessMode: neo4j.session.READ });
   try {
     return await work(session);
   } finally {
@@ -84,14 +76,11 @@ export async function executeRead<T>(
   }
 }
 
-/**
- * Execute a write query with automatic session lifecycle management.
- * The session is always closed in the finally block.
- */
 export async function executeWrite<T>(
   work: (session: Session) => Promise<T>
 ): Promise<T> {
-  const session = driver.session({ defaultAccessMode: neo4j.session.WRITE });
+  const d = getDriver();
+  const session = d.session({ defaultAccessMode: neo4j.session.WRITE });
   try {
     return await work(session);
   } finally {
@@ -108,10 +97,6 @@ export interface HealthCheckResult {
   timestamp: string;
 }
 
-/**
- * Lightweight database connectivity check.
- * Returns structured result — never throws.
- */
 export async function checkDatabaseHealth(): Promise<HealthCheckResult> {
   const timestamp = new Date().toISOString();
   const start = performance.now();
@@ -139,13 +124,12 @@ export async function checkDatabaseHealth(): Promise<HealthCheckResult> {
   }
 }
 
-/**
- * Gracefully close the driver. Call during application shutdown.
- */
 export async function closeDriver(): Promise<void> {
   try {
-    await driver.close();
-    delete globalForNeo4j.__neo4jDriver;
+    if (globalForNeo4j.__neo4jDriver) {
+      await globalForNeo4j.__neo4jDriver.close();
+      delete globalForNeo4j.__neo4jDriver;
+    }
   } catch {
     // Swallow close errors during shutdown
   }

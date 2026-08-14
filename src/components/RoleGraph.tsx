@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
-import { type GraphData } from "@/lib/types";
+import { useRouter } from "next/navigation";
+import type { ForceGraphMethods } from "react-force-graph-2d";
 import { Badge } from "./ui/Badge";
 import { EmptyState } from "./ui/EmptyState";
 import { ErrorBanner } from "./ui/ErrorBanner";
@@ -48,7 +49,8 @@ export function RoleGraph({ roleSlug, roleName }: RoleGraphProps) {
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
   const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const graphRef = useRef<any>(null);
+  const graphRef = useRef<ForceGraphMethods | undefined>(undefined);
+  const router = useRouter();
 
   // Fetch graph data
   useEffect(() => {
@@ -149,15 +151,16 @@ export function RoleGraph({ roleSlug, roleName }: RoleGraphProps) {
     [roleSlug]
   );
 
-  // Handle node click for navigation
-  const handleNodeClick = useCallback((node: GraphNode) => {
-    if (node.label === "Role" && node.slug) {
-      window.location.href = `/roles/${node.slug}`;
-    } else if (node.label === "Skill" && node.slug) {
-      window.location.href = `/skills/${node.slug}`;
-    }
-    // Technology, Project, Resource don't have dedicated pages yet
-  }, []);
+  const handleNodeClick = useCallback(
+    (node: GraphNode) => {
+      if (node.label === "Role" && node.slug) {
+        router.push(`/roles/${node.slug}`);
+      } else if (node.label === "Skill" && node.slug) {
+        router.push(`/skills/${node.slug}`);
+      }
+    },
+    [router]
+  );
 
   // Recenter graph
   const handleRecenter = useCallback(() => {
@@ -219,7 +222,7 @@ export function RoleGraph({ roleSlug, roleName }: RoleGraphProps) {
         <div>
           <h3 className={styles.title}>Interactive Graph</h3>
           <p className={styles.description}>
-            Explore {roleName}'s connected skills, technologies, and projects
+            Explore {roleName}&apos;s connected skills, technologies, and projects
           </p>
         </div>
         <button onClick={handleRecenter} className={styles.recenterButton}>
@@ -235,42 +238,42 @@ export function RoleGraph({ roleSlug, roleName }: RoleGraphProps) {
           width={dimensions.width}
           height={dimensions.height}
           nodeLabel="name"
-          nodeColor={(node: any) => getNodeColor(node as GraphNode)}
+          nodeColor={(node: unknown) => getNodeColor(node as GraphNode)}
           nodeRelSize={5}
-          nodeCanvasObject={(node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
-            const label = node.name;
+          nodeCanvasObject={(node: unknown, ctx: CanvasRenderingContext2D, globalScale: number) => {
+            const graphNode = node as GraphNode;
+            const label = graphNode.name;
             const fontSize = 12 / globalScale;
-            const size = getNodeSize(node);
-            const color = getNodeColor(node);
-            const isCenter = node.label === "Role" && node.slug === roleSlug;
+            const size = getNodeSize(graphNode);
+            const color = getNodeColor(graphNode);
+            const isCenter = graphNode.label === "Role" && graphNode.slug === roleSlug;
+            const x = graphNode.x ?? 0;
+            const y = graphNode.y ?? 0;
 
-            // Draw node circle
             ctx.beginPath();
-            ctx.arc(node.x, node.y, size, 0, 2 * Math.PI);
+            ctx.arc(x, y, size, 0, 2 * Math.PI);
             ctx.fillStyle = color;
             ctx.fill();
 
-            // Add border for center role
             if (isCenter) {
               ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
               ctx.lineWidth = 2 / globalScale;
               ctx.stroke();
             }
 
-            // Draw label at appropriate zoom
             if (globalScale > 1.5 || isCenter) {
               ctx.font = `${fontSize}px Inter, sans-serif`;
               ctx.textAlign = "center";
               ctx.textBaseline = "middle";
               ctx.fillStyle = "var(--text-primary)";
-              ctx.fillText(label, node.x, node.y + size + fontSize);
+              ctx.fillText(label, x, y + size + fontSize);
             }
           }}
           linkColor={() => "rgba(100, 116, 139, 0.3)"}
           linkWidth={1}
           linkDirectionalParticles={0}
-          onNodeClick={(node: any) => handleNodeClick(node as GraphNode)}
-          onNodeHover={(node: any) => setHoveredNode(node as GraphNode)}
+          onNodeClick={(node: unknown) => handleNodeClick(node as GraphNode)}
+          onNodeHover={(node: unknown) => setHoveredNode(node ? (node as GraphNode) : null)}
           cooldownTicks={100}
           d3VelocityDecay={0.3}
           enableNodeDrag={true}
