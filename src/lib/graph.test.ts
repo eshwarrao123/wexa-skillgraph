@@ -4,6 +4,9 @@
 
 import { describe, it, expect } from '@jest/globals';
 
+import { z } from 'zod';
+import { GraphQueryParams } from './schemas';
+
 // Mock data structures
 interface MockGraphData {
   nodes: Array<{
@@ -97,7 +100,7 @@ describe('Graph Data Transformation', () => {
   });
 });
 
-describe('Graph API Error Handling', () => {
+describe('Graph API Error Handling and Schema Parsing', () => {
   it('should return 400 for invalid slug', async () => {
     const invalidSlugs = ['', 'UPPERCASE', 'with spaces', 'special!chars'];
 
@@ -107,22 +110,29 @@ describe('Graph API Error Handling', () => {
     });
   });
 
-  it('should return 400 for invalid limit', () => {
-    const invalidLimits = [-1, 0, 5, 200];
-
-    invalidLimits.forEach((limit) => {
-      const isValid = limit >= 10 && limit <= 150;
-      expect(isValid).toBe(false);
-    });
+  it('should default limit to 80 when undefined', () => {
+    const parsed = GraphQueryParams.parse({ slug: 'valid-slug', limit: undefined });
+    expect(parsed.limit).toBe(80);
   });
 
-  it('should accept valid limit values', () => {
-    const validLimits = [10, 80, 150];
+  it('should accept valid limit within 10-150', () => {
+    const limit10 = GraphQueryParams.parse({ slug: 'valid-slug', limit: '10' });
+    expect(limit10.limit).toBe(10);
+    
+    const limit150 = GraphQueryParams.parse({ slug: 'valid-slug', limit: '150' });
+    expect(limit150.limit).toBe(150);
+  });
 
-    validLimits.forEach((limit) => {
-      const isValid = limit >= 10 && limit <= 150;
-      expect(isValid).toBe(true);
-    });
+  it('should reject limit below 10 or above 150', () => {
+    expect(() => GraphQueryParams.parse({ slug: 'valid-slug', limit: '9' }))
+      .toThrow(z.ZodError);
+    expect(() => GraphQueryParams.parse({ slug: 'valid-slug', limit: '151' }))
+      .toThrow(z.ZodError);
+  });
+
+  it('should reject malformed non-numeric values', () => {
+    expect(() => GraphQueryParams.parse({ slug: 'valid-slug', limit: 'abc' }))
+      .toThrow(z.ZodError);
   });
 });
 

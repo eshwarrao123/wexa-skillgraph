@@ -62,10 +62,9 @@ export async function getRoleDetail(slug: string): Promise<RoleDetail | null> {
       `
       MATCH (r:Role {slug: $slug})
       OPTIONAL MATCH (r)-[rs:REQUIRES_SKILL]->(s:Skill)
+      WITH r, collect(DISTINCT CASE WHEN s IS NOT NULL THEN {skill: s, importance: rs.importance} END) AS skills
       OPTIONAL MATCH (r)-[ut:USES_TECHNOLOGY]->(t:Technology)
-      RETURN r,
-        collect(DISTINCT CASE WHEN s IS NOT NULL THEN {skill: s, importance: rs.importance} END) AS skills,
-        collect(DISTINCT CASE WHEN t IS NOT NULL THEN {tech: t, frequency: ut.frequency} END) AS technologies
+      RETURN r, skills, collect(DISTINCT CASE WHEN t IS NOT NULL THEN {tech: t, frequency: ut.frequency} END) AS technologies
       `,
       { slug }
     );
@@ -83,6 +82,33 @@ export async function getRoleDetail(slug: string): Promise<RoleDetail | null> {
       frequency: string;
     }>;
 
+    // Defensively deduplicate skills and technologies in TypeScript
+    const uniqueSkills = new Map();
+    rawSkills
+      .filter((item) => item && item.skill != null)
+      .forEach((item) => {
+        const id = item.skill.properties.id as string;
+        if (!uniqueSkills.has(id)) {
+          uniqueSkills.set(id, {
+            skill: normalizeSkill(item.skill.properties),
+            importance: item.importance as SkillImportance,
+          });
+        }
+      });
+
+    const uniqueTechs = new Map();
+    rawTechs
+      .filter((item) => item && item.tech != null)
+      .forEach((item) => {
+        const id = item.tech.properties.id as string;
+        if (!uniqueTechs.has(id)) {
+          uniqueTechs.set(id, {
+            tech: normalizeTechnology(item.tech.properties),
+            frequency: item.frequency as TechFrequency,
+          });
+        }
+      });
+
     return {
       id: r.id,
       name: r.name,
@@ -90,18 +116,8 @@ export async function getRoleDetail(slug: string): Promise<RoleDetail | null> {
       category: r.category,
       description: r.description,
       averageSalary: toNumber(r.averageSalary),
-      skills: rawSkills
-        .filter((item) => item.skill != null)
-        .map((item) => ({
-          skill: normalizeSkill(item.skill.properties),
-          importance: item.importance as SkillImportance,
-        })),
-      technologies: rawTechs
-        .filter((item) => item.tech != null)
-        .map((item) => ({
-          tech: normalizeTechnology(item.tech.properties),
-          frequency: item.frequency as TechFrequency,
-        })),
+      skills: Array.from(uniqueSkills.values()),
+      technologies: Array.from(uniqueTechs.values()),
     };
   });
 }

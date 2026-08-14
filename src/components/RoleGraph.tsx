@@ -62,11 +62,25 @@ export function RoleGraph({ roleSlug, roleName }: RoleGraphProps) {
         setError(null);
 
         const response = await fetch(`/api/graph/role/${roleSlug}`);
-        const result = await response.json();
 
         if (!response.ok) {
-          throw new Error(result.error?.message || "Failed to load graph");
+          const isJson = response.headers.get("content-type")?.includes("application/json");
+          if (isJson) {
+            const errorResult = await response.json();
+            throw new Error(errorResult.error?.message || "Failed to load graph");
+          } else {
+            const textResponse = await response.text();
+            console.error("API returned non-JSON error:", textResponse.substring(0, 200));
+            throw new Error("Unable to load the role graph right now.");
+          }
         }
+
+        const isJson = response.headers.get("content-type")?.includes("application/json");
+        if (!isJson) {
+          throw new Error("Unable to load the role graph right now.");
+        }
+
+        const result = await response.json();
 
         if (mounted) {
           setGraphData(result.data);
@@ -113,17 +127,17 @@ export function RoleGraph({ roleSlug, roleName }: RoleGraphProps) {
   const getNodeColor = useCallback((node: GraphNode) => {
     switch (node.label) {
       case "Role":
-        return "var(--color-role)";
+        return "#3b82f6";
       case "Skill":
-        return "var(--color-skill)";
+        return "#10b981";
       case "Technology":
-        return "var(--color-tech)";
+        return "#8b5cf6";
       case "Project":
-        return "var(--color-project)";
+        return "#f59e0b";
       case "Resource":
-        return "var(--color-resource)";
+        return "#64748b";
       default:
-        return "var(--text-muted)";
+        return "#94a3b8";
     }
   }, []);
 
@@ -256,7 +270,7 @@ export function RoleGraph({ roleSlug, roleName }: RoleGraphProps) {
             ctx.fill();
 
             if (isCenter) {
-              ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
+              ctx.strokeStyle = "rgba(198, 190, 190, 0.8)";
               ctx.lineWidth = 2 / globalScale;
               ctx.stroke();
             }
@@ -265,11 +279,20 @@ export function RoleGraph({ roleSlug, roleName }: RoleGraphProps) {
               ctx.font = `${fontSize}px Inter, sans-serif`;
               ctx.textAlign = "center";
               ctx.textBaseline = "middle";
-              ctx.fillStyle = "var(--text-primary)";
-              ctx.fillText(label, x, y + size + fontSize);
+
+              const labelY = y + size + fontSize;
+
+              // Add dark stroke for readability
+              ctx.lineWidth = 2.5 / globalScale;
+              ctx.strokeStyle = "rgba(0, 0, 0, 0.8)";
+              ctx.strokeText(label, x, labelY);
+
+              // Light contrasting text color
+              ctx.fillStyle = "#F8FAFC";
+              ctx.fillText(label, x, labelY);
             }
           }}
-          linkColor={() => "rgba(100, 116, 139, 0.3)"}
+          linkColor={() => "rgba(248, 248, 248, 0.97)"}
           linkWidth={1}
           linkDirectionalParticles={0}
           onNodeClick={(node: unknown) => handleNodeClick(node as GraphNode)}

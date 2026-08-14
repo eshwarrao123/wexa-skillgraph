@@ -23,8 +23,7 @@ export default async function HomePage() {
       <section className={styles.hero}>
         <div className="container">
           <h1 className={styles.heroTitle}>
-            Explore how skills connect to{" "}
-            <span className={styles.heroGradient}>careers</span>
+            Explore how skills connect to careers
           </h1>
           <p className={styles.heroDescription}>
             SkillGraph maps relationships between roles, skills, technologies and

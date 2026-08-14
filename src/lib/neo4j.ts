@@ -45,6 +45,7 @@ function getDriver(): Driver {
     neo4j.auth.basic(env.user, env.password),
     {
       maxConnectionPoolSize: 10,
+      maxConnectionLifetime: 3 * 60 * 1000,
       connectionAcquisitionTimeout: 10_000,
       connectionTimeout: 5_000,
       logging: {

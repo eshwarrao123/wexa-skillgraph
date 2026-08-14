@@ -30,7 +30,11 @@ export async function GET(
     // Parse query parameters for limit
     const { searchParams } = new URL(request.url);
     const limitParam = searchParams.get("limit");
-    const { limit } = GraphQuerySchema.parse({ limit: limitParam });
+    
+    // Zod's coerce.number() turns null into 0. Pass undefined when omitted to trigger default().
+    const { limit } = GraphQuerySchema.parse({
+      limit: limitParam === null ? undefined : limitParam,
+    });
 
     const role = await getRoleDetail(validatedSlug);
     if (!role) {
